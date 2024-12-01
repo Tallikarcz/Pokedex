@@ -36,7 +36,7 @@
     1px -1px 0px black, 
     -1px -1px 0px black; /* Sombras más sutiles */
     top: 38%;
-    right: 20%;
+    right: 14%;
     font-size: clamp(3px, 4vw, 35px);
     text-transform: capitalize;
 }
