@@ -1,11 +1,19 @@
+// EDITOR DE DOM DATOS POKEMON
 const pokemonNameAndNumber = document.querySelector(' .pokemon__name');
 const pokemonNumber = document.querySelector(' .pokemon__number');
 const pokemonImage = document.querySelector(' .pokemon__image');
+const pokemonWeight = document.querySelector(' .pokemon__weight');
+const pokemonHeight = document.querySelector(' .pokemon__height');
+const pokemonType = document.querySelector(' .pokemon__type');
+
 const form = document.querySelector(' .form');
 const input = document.querySelector(' .input__search');
+
+// BOTONES
 const buttonPrev = document.querySelector(' .btn-prev');
 const buttonNext = document.querySelector(' .btn-next');
 
+// INICIAR POKEDEX EN POKEMON 1
 let searchPokemon = 1;
 
 const fetchPokemon = async (pokemon) => {
@@ -21,14 +29,20 @@ const fetchPokemon = async (pokemon) => {
 const renderPokemon = async (pokemon) => {
 
     pokemonNameAndNumber.innerHTML = 'Loading... ';
+    pokemonWeight.innerHTML = ' ';
+    pokemonHeight.innerHTML = ' ';
+    pokemonType.innerHTML = ' ';
 
     const data = await fetchPokemon(pokemon)
-
+    console.log(data);
     
     if (data) {
         pokemonImage.style.display = 'block';
         pokemonNameAndNumber.innerHTML = data.id + " - " + data.name;
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
+        pokemonWeight.innerHTML = (data.weight)/10 + " KG";
+        pokemonHeight.innerHTML = (data.height)/10 + " meters";
+        pokemonType.innerHTML = "Type: " + " " + data.types[0].type.name;
         input.value = '';
         searchPokemon = data.id;
         const cries = new Audio(data.cries?.latest || data.cries?.legacy || '');
