@@ -108,6 +108,20 @@
   box-shadow: -2px 3px 0 #222, -4px 6px 0 #000;
 }
 
+.btn-shiny {
+  background-color: #FFD700;
+    background-image: linear-gradient(
+        120deg,
+        rgba(255,255,255, 0) 30%,
+        rgba(255,255,255, .8),
+        rgba(255,255,255, 0) 70%
+    );
+}
+
+.shiny-star {
+  font-size: 0.9rem;
+}
+
 .button:active {
   box-shadow: inset -4px 4px 0 #222;
   font-size: 0.9rem;
