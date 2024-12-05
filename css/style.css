@@ -25,6 +25,15 @@
   padding: 15px;
 }
 
+.shiny__effect {
+  position:absolute;
+  display: none;
+  top: 30%;
+  left: 28%;
+  height: 20%;
+  transform: translate(-56%, 20%);
+}
+
 .data {
   display: flex;
   text-align: center;

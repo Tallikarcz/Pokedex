@@ -2,6 +2,7 @@
 const pokemonNameAndNumber = document.querySelector(" .pokemon__name");
 const pokemonNumber = document.querySelector(" .pokemon__number");
 const pokemonImage = document.querySelector(" .pokemon__image");
+const shinyGif = document.querySelector(" .shiny__effect");
 const pokemonWeight = document.querySelector(" .pokemon__weight");
 const pokemonHeight = document.querySelector(" .pokemon__height");
 const pokemonType = document.querySelector(" .pokemon__type");
@@ -75,18 +76,27 @@ const renderPokemon = async (pokemon) => {
   
       if (defaultSprite) {
         pokemonImage.src = data["sprites"]["versions"]["generation-v"]["black-white"]["animated"]["front_shiny"];
-        defaultSprite = false; 
+        defaultSprite = false;
+        shinyGif.style.display = "initial"; 
+        setTimeout(() => {
+          shinyGif.style.display = "none"; 
+      }, 1000);
+        let shinySound = new Audio('sounds/shiny.mp3');
+        shinySound.play();
+        
       } else {
         pokemonImage.src = data["sprites"]["versions"]["generation-v"]["black-white"]["animated"]["front_default"] || data["sprites"]["front_default"];
         defaultSprite = true; 
+        shinyGif.style.display = "none";
       }
     }
 
     buttonShiny.onclick = toggleSprite;
-
+    
     // SONIDOS DEL POKEMON
     const cries = new Audio(data.cries?.latest || data.cries?.legacy || "");
     cries.play();
+
 
   } else {
     pokemonImage.style.display = "none";
