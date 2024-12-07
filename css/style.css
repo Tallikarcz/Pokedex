@@ -21,12 +21,14 @@
   position: inherit;
   width: auto;
   height: 70vh;
-  max-width: 100%;
+  /* Mantén la altura relativa a la ventana */
+  max-width: 90vw;
+  /* Limita el ancho a un porcentaje de la pantalla */
   padding: 15px;
 }
 
 .shiny__effect {
-  position:absolute;
+  position: absolute;
   display: none;
   top: 30%;
   left: 28%;
@@ -61,6 +63,7 @@
   text-shadow: 1px 1px 0px black, -1px 1px 0px black, 1px -1px 0px black,
     -1px -1px 0px black;
   font-size: 1.3rem;
+  font-size: clamp(1.5vw, 1.3rem, 2vw);
 }
 
 .pokemon__image {
@@ -118,13 +121,13 @@
 }
 
 .btn-shiny {
-  background-color: #FFD700;
-    background-image: linear-gradient(
-        120deg,
-        rgba(255,255,255, 0) 30%,
-        rgba(255,255,255, .8),
-        rgba(255,255,255, 0) 70%
-    );
+  background-color: #ffd700;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0) 70%
+  );
 }
 
 .shiny-star {
@@ -157,8 +160,10 @@ main {
 
 @media (max-width: 768px) {
   .pokedex {
-    height: auto; /* Ajuste automático de la altura */
-    max-width: 90vw; /* Aseguramos que la imagen no sea más ancha que la pantalla */
+    height: auto;
+    /* Ajuste automático de la altura */
+    max-width: 90vw;
+    /* Aseguramos que la imagen no sea más ancha que la pantalla */
   }
 
   body {
@@ -168,5 +173,7 @@ main {
       rgba(45, 145, 253, 1) 100%
     );
     min-height: 100vh;
+    font-size: clamp(12px, 2vw, 16px);
+    /* Tamaño de fuente dinámico */
   }
 }

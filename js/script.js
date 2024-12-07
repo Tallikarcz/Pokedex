@@ -6,20 +6,32 @@ const shinyGif = document.querySelector(" .shiny__effect");
 const pokemonWeight = document.querySelector(" .pokemon__weight");
 const pokemonHeight = document.querySelector(" .pokemon__height");
 const pokemonType = document.querySelector(" .pokemon__type");
-const pokemonDesc = document.querySelector(" .pokemon__desc")
+const pokemonDesc = document.querySelector(" .pokemon__desc");
 const form = document.querySelector(" .form");
 const input = document.querySelector(" .input__search");
 
+// INICIAR POKEDEX EN POKEMON 1
+let searchPokemon = 1;
+
 // Valor por defecto sprite
 let defaultSprite = true;
+
+// CRIES DEL POKEMON PARA PAUSAR
+let cries; 
+
+function criesPlay(soundURL) {
+  if (cries) {
+    cries.pause();
+  }
+  cries = new Audio(soundURL);
+  cries.play();
+}
 
 // BOTONES
 const buttonPrev = document.querySelector(" .btn-prev");
 const buttonNext = document.querySelector(" .btn-next");
 const buttonShiny = document.querySelector(" .btn-shiny");
 
-// INICIAR POKEDEX EN POKEMON 1
-let searchPokemon = 1;
 
 // FUNCION ASINCRONA DATA POKEMON
 const fetchPokemon = async (pokemon) => {
@@ -42,7 +54,7 @@ const fetchPokemonDesc = async (pokemon) => {
     const dataDesc = await APIResponse.json();
     return dataDesc;
   }
-}
+};
 
 // RENDER POKEMON
 const renderPokemon = async (pokemon) => {
@@ -53,8 +65,8 @@ const renderPokemon = async (pokemon) => {
   pokemonDesc.innerHTML = " ";
 
   const data = await fetchPokemon(pokemon);
-  const dataDesc = await fetchPokemonDesc(pokemon);  
-  console.log(dataDesc);
+  const dataDesc = await fetchPokemonDesc(pokemon);
+  console.log(dataDesc); //debug
 
   if (data) {
     pokemonImage.style.display = "block";
@@ -62,42 +74,51 @@ const renderPokemon = async (pokemon) => {
 
     pokemonWeight.innerHTML = data.weight / 10 + " KG";
     pokemonHeight.innerHTML = data.height / 10 + " meters";
-    pokemonType.innerHTML = "Type: " + " " + data.types[0].type.name;  
-    const descInEnglish = dataDesc.flavor_text_entries.find(entry => entry.language.name === "en");
-    pokemonDesc.innerHTML = descInEnglish ? descInEnglish.flavor_text : "No description available";
+    pokemonType.innerHTML = "Type: " + " " + data.types[0].type.name;
+    const descInEnglish = dataDesc.flavor_text_entries.find(
+      (entry) => entry.language.name === "en"
+    );
+    pokemonDesc.innerHTML = descInEnglish
+      ? descInEnglish.flavor_text
+      : "No description available";
 
     input.value = "";
     searchPokemon = data.id;
     // Sprite por defecto
-    pokemonImage.src = data["sprites"]["versions"]["generation-v"]["black-white"]["animated"]["front_default"] || data["sprites"]["front_default"];
+    pokemonImage.src =
+      data["sprites"]["versions"]["generation-v"]["black-white"]["animated"][
+        "front_default"
+      ] || data["sprites"]["front_default"];
 
     // Funcion boton shiny
     function toggleSprite() {
-  
       if (defaultSprite) {
-        pokemonImage.src = data["sprites"]["versions"]["generation-v"]["black-white"]["animated"]["front_shiny"];
+        pokemonImage.src =
+          data["sprites"]["versions"]["generation-v"]["black-white"][
+            "animated"
+          ]["front_shiny"];
         defaultSprite = false;
-        shinyGif.style.display = "initial"; 
+        shinyGif.style.display = "initial";
         setTimeout(() => {
-          shinyGif.style.display = "none"; 
-      }, 1000);
-        let shinySound = new Audio('sounds/shiny.mp3');
+          shinyGif.style.display = "none";
+        }, 1000);
+        let shinySound = new Audio("sounds/shiny.mp3");
         shinySound.play();
-        
       } else {
-        pokemonImage.src = data["sprites"]["versions"]["generation-v"]["black-white"]["animated"]["front_default"] || data["sprites"]["front_default"];
-        defaultSprite = true; 
+        pokemonImage.src =
+          data["sprites"]["versions"]["generation-v"]["black-white"][
+            "animated"
+          ]["front_default"] || data["sprites"]["front_default"];
+        defaultSprite = true;
         shinyGif.style.display = "none";
       }
     }
 
     buttonShiny.onclick = toggleSprite;
-    
+
     // SONIDOS DEL POKEMON
-    const cries = new Audio(data.cries?.latest || data.cries?.legacy || "");
-    cries.play();
-
-
+    const criesURL = data.cries?.latest || data.cries?.legacy || null;
+    criesPlay(criesURL);
   } else {
     pokemonImage.style.display = "none";
     pokemonNameAndNumber.innerHTML = "Not found!";
