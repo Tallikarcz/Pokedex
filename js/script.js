@@ -10,6 +10,7 @@ const pokemonDesc = document.querySelector(" .pokemon__desc");
 const form = document.querySelector(" .form");
 const input = document.querySelector(" .input__search");
 
+
 // INICIAR POKEDEX EN POKEMON 1
 let searchPokemon = 1;
 
@@ -17,15 +18,7 @@ let searchPokemon = 1;
 let defaultSprite = true;
 
 // CRIES DEL POKEMON PARA PAUSAR
-let cries; 
-
-function criesPlay(soundURL) {
-  if (cries) {
-    cries.pause();
-  }
-  cries = new Audio(soundURL);
-  cries.play();
-}
+let cries = null; 
 
 // BOTONES
 const buttonPrev = document.querySelector(" .btn-prev");
@@ -118,7 +111,20 @@ const renderPokemon = async (pokemon) => {
 
     // SONIDOS DEL POKEMON
     const criesURL = data.cries?.latest || data.cries?.legacy || null;
-    criesPlay(criesURL);
+
+    function criesPlay(soundURL) {
+      if (soundURL) {
+        if (cries) {
+          cries.pause();
+        }
+        cries = new Audio(soundURL);
+        cries.play(); 
+      }
+    }
+
+    if (criesURL) {
+      criesPlay(criesURL);
+    }
   } else {
     pokemonImage.style.display = "none";
     pokemonNameAndNumber.innerHTML = "Not found!";
