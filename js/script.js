@@ -1,30 +1,44 @@
 // EDITOR DE DOM DATOS POKEMON
-const pokemonNameAndNumber = document.querySelector(" .pokemon__name");
-const pokemonNumber = document.querySelector(" .pokemon__number");
-const pokemonImage = document.querySelector(" .pokemon__image");
-const shinyGif = document.querySelector(" .shiny__effect");
-const pokemonWeight = document.querySelector(" .pokemon__weight");
-const pokemonHeight = document.querySelector(" .pokemon__height");
-const pokemonType = document.querySelector(" .pokemon__type");
-const pokemonDesc = document.querySelector(" .pokemon__desc");
-const form = document.querySelector(" .form");
-const input = document.querySelector(" .input__search");
-
-
-// INICIAR POKEDEX EN POKEMON 1
-let searchPokemon = 1;
+const pokemonNameAndNumber = document.querySelector(".pokemon__name");
+const pokemonNumber = document.querySelector(".pokemon__number");
+const pokemonImage = document.querySelector(".pokemon__image");
+const shinyGif = document.querySelector(".shiny__effect");
+const pokemonWeight = document.querySelector(".pokemon__weight");
+const pokemonHeight = document.querySelector(".pokemon__height");
+const pokemonType = document.querySelector(".pokemon__type");
+const pokemonDesc = document.querySelector(".pokemon__desc");
+const form = document.querySelector(".form");
+const input = document.querySelector(".input__search");
 
 // Valor por defecto sprite
 let defaultSprite = true;
 
 // CRIES DEL POKEMON PARA PAUSAR
-let cries = null; 
+let cries = null;
+
+// Toggle de la Pokedex (on & off)
+let pokedexOn = false;
 
 // BOTONES
-const buttonPrev = document.querySelector(" .btn-prev");
-const buttonNext = document.querySelector(" .btn-next");
-const buttonShiny = document.querySelector(" .btn-shiny");
+const buttonPrev = document.querySelector(".btn-prev");
+const buttonNext = document.querySelector(".btn-next");
+const buttonShiny = document.querySelector(".btn-shiny");
+const buttonPower = document.querySelector(".btn-power"); // botón de poder
 
+// Esconder los elementos inicialmente
+function esconderPokemon() {
+  pokemonImage.style.display = "none";
+pokemonNameAndNumber.innerHTML = " ";
+pokemonWeight.innerHTML = " ";
+pokemonHeight.innerHTML = " ";
+pokemonType.innerHTML = " ";
+pokemonDesc.innerHTML = " ";
+}
+
+esconderPokemon();
+
+// INICIAR POKEDEX EN POKEMON 1
+let searchPokemon = 1;
 
 // FUNCION ASINCRONA DATA POKEMON
 const fetchPokemon = async (pokemon) => {
@@ -37,6 +51,7 @@ const fetchPokemon = async (pokemon) => {
     return data;
   }
 };
+
 // FUNCION ASINCRONA DATA CON DESCRIPCION POKEMON
 const fetchPokemonDesc = async (pokemon) => {
   const APIResponse = await fetch(
@@ -51,15 +66,11 @@ const fetchPokemonDesc = async (pokemon) => {
 
 // RENDER POKEMON
 const renderPokemon = async (pokemon) => {
-  pokemonNameAndNumber.innerHTML = "Loading... ";
-  pokemonWeight.innerHTML = " ";
-  pokemonHeight.innerHTML = " ";
-  pokemonType.innerHTML = " ";
-  pokemonDesc.innerHTML = " ";
+  esconderPokemon();
 
   const data = await fetchPokemon(pokemon);
   const dataDesc = await fetchPokemonDesc(pokemon);
-  console.log(dataDesc); //debug
+  console.log(dataDesc);
 
   if (data) {
     pokemonImage.style.display = "block";
@@ -99,9 +110,9 @@ const renderPokemon = async (pokemon) => {
         shinySound.play();
       } else {
         pokemonImage.src =
-          data["sprites"]["versions"]["generation-v"]["black-white"][
-            "animated"
-          ]["front_default"] || data["sprites"]["front_default"];
+          data["sprites"]["versions"]["generation-v"]["black-white"]["animated"][
+            "front_default"
+          ] || data["sprites"]["front_default"];
         defaultSprite = true;
         shinyGif.style.display = "none";
       }
@@ -118,7 +129,7 @@ const renderPokemon = async (pokemon) => {
           cries.pause();
         }
         cries = new Audio(soundURL);
-        cries.play(); 
+        cries.play();
       }
     }
 
@@ -130,6 +141,18 @@ const renderPokemon = async (pokemon) => {
     pokemonNameAndNumber.innerHTML = "Not found!";
   }
 };
+
+buttonPower.addEventListener("click", () => {
+    if (!pokedexOn) {
+        renderPokemon(searchPokemon);
+        pokedexOn = true;
+        buttonPower.style.backgroundColor = "green"; // Cambia el color del botón para indicar que está on
+    } else {
+        esconderPokemon();
+        pokedexOn = false;
+        buttonPower.style.backgroundColor = "red"; // Cambia el color del botón para indicar que está off
+    }
+});
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -149,5 +172,3 @@ buttonNext.addEventListener("click", () => {
     renderPokemon(searchPokemon);
   }
 });
-
-renderPokemon(searchPokemon);
